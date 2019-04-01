@@ -1,10 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node
+  template:
+    metadata:
+      labels:
+        app: node
+    spec:
+      containers:
+        - name: node
+          image: cloud.canister.io:5000/wolnik/nodeskaff
+          ports:
+            - containerPort: 3000
+      imagePullSecrets:
+        - name: registrypullsecret
+---
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
   name: node
 spec:
-  containers:
-    - name: node
-      image: gcr.io/k8s-skaffold/node-example
-      ports:
-        - containerPort: 3000
+  selector:
+    app: node
+  type: NodePort # remove if using ClusterIp
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 32100
+  # clusterIp: none # uncomment if using ClusterIp
