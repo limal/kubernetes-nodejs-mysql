@@ -10,4 +10,3 @@ deploy:
   kubectl:
     manifests:
       - "backend/k8s/**"
-      - "kubernetes-manifests/**"
